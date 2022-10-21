@@ -1,0 +1,88 @@
+﻿<Window x:Class="ByeByeChatwork.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:local="clr-namespace:ByeByeChatwork"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <wv2:WebView2 Name="wb" NavigationCompleted="Wb_NavigationCompleted"
+                      Loaded="Wb_Loaded" Visibility="Visible"></wv2:WebView2>
+        <Grid Visibility="Collapsed" x:Name="terminal">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding SavePath, Mode=TwoWay ,RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    <Button Grid.Column="1" Content="Search" Width="60" Click="Button_Click"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="checkDownloadFile"
+                        Checked="CheckDownloadFile_Checked" Unchecked="CheckDownloadFile_Unchecked" Content="Include files"/>
+                    <CheckBox x:Name="checkLimitSize" Visibility="Collapsed"
+                        Checked="CheckLimitSize_Checked" Unchecked="CheckLimitSize_Unchecked" Content="Files smaller than 1GB only"/>
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox x:Name="selectAll" Click="SelectAll_Click" Checked="SelectAll_Checked" Unchecked="SelectAll_Unchecked" IsThreeState="True">Tất tay đê</CheckBox>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Rooms, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="18"/>
+                                        <ColumnDefinition Width="36"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <CheckBox IsChecked="{Binding Checked, Mode=TwoWay}"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Image Source="{Binding Icon}"/>
+                                    </Grid>
+                                    <Grid Grid.Column="2">
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Grid.Row="2" x:Name="downloadbtn" Click="Downloadbtn_Click" Content="Tải xuống"/>
+                </Grid>
+                <Grid Grid.Column="1" Background="Gray">
+                    <ListView x:Name="lslView" Focusable="False" BorderThickness="0" Background="Transparent" 
+                              d:ScrollViewer.HorizontalScrollBarVisibility="{Binding ListScroll, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=Window}}"
+                      ItemsSource="{Binding Logs, RelativeSource={RelativeSource AncestorType=Window}}"
+                      SelectedItem="{Binding LogLine, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Text, Mode=TwoWay}" Foreground="{Binding Foreground}"
+                                d:TextWrapping="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=WordWrap, Mode=TwoWay}"
+                                Background="Transparent"
+                                FontSize="16"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
